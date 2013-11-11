@@ -8,8 +8,12 @@
 <body>
   <h1>knockout-sample running!</h1>
   <div>
-      Data Binding: 
-      <span class="status" data-bind="text: status">Inactive</span>
+      <div data-bind="visible: searchKeyword().length > 0">
+      	Search with <span data-bind="text: searchKeyword"></span> on Youtube.</div>
+
+      <input type="text" data-bind="value: searchKeyword"></input>
+
+      <button data-bind="click: search">Search</button>
   </div>
 </body>
 </html>
