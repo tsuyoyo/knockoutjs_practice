@@ -7,10 +7,7 @@
 // requirejsを読み込む際に何も指定しない場合は，読み出したhtmlのディレクトリをbaseUrlとする。
 // この場合、"jquery"と"knockout"の場所はconfig.jsの中でrequreJsに知らせている。
 //
-// （アイデアメモ←あとで消す）
-// ここにオリジナルのjsコンポーネントが追加できればいい感じかも？
-// → あった。http://www.yoheim.net/blog.php?q=20130103 （←読んでみる）
-define(["jquery", "knockout"], function($, ko) {
+define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper) {
 
   function viewModel() {
   	
