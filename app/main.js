@@ -13,6 +13,15 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
   	
   	this.searchKeyword = ko.observable("");
 
+    this.searchTitle = function() {
+      result = this.searchResult;
+      youtubewrapper.getVideoTitle(this.searchKeyword(), function(title) {
+        result = title;
+      });
+    };
+
+    this.searchResult = ko.observable("aaa");
+
   }
 
   // （メモ）
