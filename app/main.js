@@ -16,7 +16,8 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
     this.searchTitle = function() {
       result = this.searchResult;
       youtubewrapper.getVideoTitle(this.searchKeyword(), function(title) {
-        result = title;
+        // result = title;
+        result(title); // <--こうかな？
       });
     };
 
