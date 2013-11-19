@@ -16,9 +16,11 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
   	self.searchKeyword = ko.observable("");
 
     self.searchTitle = function() {
-      youtubewrapper.getVideoTitle(this.searchKeyword(), function(title) {
-        self.searchResult(title);
-      });
+      youtubewrapper.searchVideo(this.searchKeyword(), function(title) {}, 0);
+
+      // youtubewrapper.getVideoTitle(this.searchKeyword(), function(title) {
+      //   self.searchResult(title);
+      // });
     };
 
     self.searchResult = ko.observable("aaa");
