@@ -4,8 +4,33 @@
   <meta charset="utf-8">
   <title>This is my sample app with knockoutjs</title>
   <script data-main="app/config" src="bower_components/requirejs/require.js"></script>
+  
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="bower_components/jquery/jquery.js"></script>
+  
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
 </head>
 <body>
+
+  <!-- Navigation bar -->
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+      <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+      </div>
+    </div>
+  </nav>
+
   <h1>knockout-sample running!</h1>
   <div>
       <div data-bind="visible: searchKeyword().length > 0">
