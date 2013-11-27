@@ -18,14 +18,18 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
   	self.keyword = ko.observable("");
 
     self.searchContents = function() {
-      youtubewrapper.searchVideo(this.searchKeyword(), function(title) {}, 0);
+      youtubewrapper.searchVideo(self.keyword(), function(searchResults) {
+        for(var i=0; i<searchResults.length; i++) {
+          self.searchResults().push(searchResults[i]);
+        }
+      }, 0);
 
       // youtubewrapper.getVideoTitle(this.searchKeyword(), function(title) {
       //   self.searchResult(title);
       // });
     };
 
-    self.searchResult = ko.observable("aaa");
+    self.searchResults = ko.observableArray();
 
     self.views = ko.observableArray([
       {name: 'youtube', provider: null},
@@ -37,6 +41,8 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
 
     self.onViewSwitched = function(newView) {
       self.selectedViewName(newView.name);
+      saveFocusedView(newView.name);
+      self.searchResults().removeAll();
     };
 
     self.bookmarkFocused = function() {

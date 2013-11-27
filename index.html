@@ -54,8 +54,21 @@
   <div class="input-group" data-bind="visible: !bookmarkFocused()">
     <input type="text" class="form-control" data-bind="value: keyword" placeholder="Keyword" />
     <span class="input-group-btn">
-      <button class="btn btn-default" type="button">Search</button>
+      <button class="btn btn-default" type="button" data-bind="click: searchContents">Search</button>
     </span>
+  </div>
+
+  <!-- Contents list -->
+  <div data-bind="visible: searchResults.length > 0">
+    <ul data-bind="foreach: searchResults">
+      <li>
+        aaa
+        <!--
+        <img data-bind="attr: { src: thumbnail }"></img>
+        <span data-bind="text: title"></span>
+      -->
+      </li>
+    </ul>
   </div>
 
 </body>
