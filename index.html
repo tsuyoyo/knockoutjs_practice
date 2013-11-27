@@ -4,43 +4,59 @@
   <meta charset="utf-8">
   <title>This is my sample app with knockoutjs</title>
   <script data-main="app/config" src="bower_components/requirejs/require.js"></script>
-  
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="bower_components/jquery/jquery.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   
   <!-- Optional theme -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
 
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="bower_components/jquery/jquery.js"></script>
-  
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 </head>
 <body>
 
-  <!-- Navigation bar -->
+  <!-- Navigation bar (supporting resoponsible UI) -->
   <nav class="navbar navbar-default" role="navigation">
-    <div class="navbar-header">
-      <div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-      </div>
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header" >
+      <button type="button" class="navbar-toggle" data-toggle="collapse"
+              data-target="#main-nav-collapse" >
+        <!-- (Memo)
+        sr-only is for accessiblity. Not displayed but read if it's voice lead device -->
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <a class="navbar-brand" href="#">
+        <span data-bind="text: selectedViewName"></span> view
+      </a>
+    </div>
+
+    <!-- View selector -->
+    <!-- (Memo) id="main-nav-collapse" is reffered by above collapsed part-->
+    <!-- (Memo) div classified by nav-collapse isn't shown when width of browser is narrow --> 
+    <div class="collapse navbar-collapse" id="main-nav-collapse">
+      <ul class="nav navbar-nav" data-bind="foreach: views" >
+        <li data-bind="css:{ active: name === $parent.selectedViewName() }, 
+                       click: $parent.onViewSwitched" >
+          <a href="#"><span data-bind="text: name"></span></a>
+        </li>
+      </ul>
     </div>
   </nav>
 
-  <h1>knockout-sample running!</h1>
-  <div>
-      <div data-bind="visible: searchKeyword().length > 0">
-      	Search with <span data-bind="text: searchKeyword"></span> on Youtube.</div>
-
-      <input type="text" data-bind="value: searchKeyword"></input>
-
-      <button data-bind="click: searchTitle">Search</button>
-
-      <BR>Test result : <span data-bind="text: searchResult"></span>
+  <!-- Search form (displayed only for search views) -->
+  <div class="input-group" data-bind="visible: !bookmarkFocused()">
+    <input type="text" class="form-control" data-bind="value: keyword" placeholder="Keyword" />
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button">Search</button>
+    </span>
   </div>
+
 </body>
 </html>

@@ -11,11 +11,13 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
 
   function viewModel() {
   	
+    var BOOKMARK_VIEW_NAME = 'bookmark';
+
     var self = this;
 
-  	self.searchKeyword = ko.observable("");
+  	self.keyword = ko.observable("");
 
-    self.searchTitle = function() {
+    self.searchContents = function() {
       youtubewrapper.searchVideo(this.searchKeyword(), function(title) {}, 0);
 
       // youtubewrapper.getVideoTitle(this.searchKeyword(), function(title) {
@@ -25,6 +27,46 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
 
     self.searchResult = ko.observable("aaa");
 
+    self.views = ko.observableArray([
+      {name: 'youtube', provider: null},
+      {name: 'instagram', provider: null},
+      {name: BOOKMARK_VIEW_NAME}
+    ]);
+
+    self.selectedViewName = ko.observable(self.views()[0].name);
+
+    self.onViewSwitched = function(newView) {
+      self.selectedViewName(newView.name);
+    };
+
+    self.bookmarkFocused = function() {
+      return (self.selectedViewName() === BOOKMARK_VIEW_NAME);
+    };
+
+  }
+
+  function saveFocusedView(viewName) {
+    var localStorage = getLocalStorage();
+    if (localStorage) {
+      localStorage.setItem('focusedViewName', viewName);
+    }
+  }
+
+  function loadFocusedView() {
+    var localStorage = getLocalStorage();
+    if (localStorage) {
+      return localStorage.getItem('focusedViewName');
+    } else {
+      return 'bookmark';
+    }
+  }
+
+  function getLocalStorage() {
+    var localStorage = window.localStorage;
+    if (!localStorage) {
+      console.log("localStorage isn't supported in this runtime");
+    }
+    return localStorage;
   }
 
   // （メモ）
