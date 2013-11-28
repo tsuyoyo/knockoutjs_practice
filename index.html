@@ -59,17 +59,12 @@
   </div>
 
   <!-- Contents list -->
-  <div data-bind="visible: searchResults.length > 0">
-    <ul data-bind="foreach: searchResults">
-      <li>
-        aaa
-        <!--
-        <img data-bind="attr: { src: thumbnail }"></img>
-        <span data-bind="text: title"></span>
-      -->
-      </li>
-    </ul>
-  </div>
+  <ul data-bind="foreach: listItems">
+    <li>
+      <img data-bind="attr: { src: thumbnail }"></img>
+      <span data-bind="text: title"></span>
+    </li>
+  </ul>
 
 </body>
 </html>
