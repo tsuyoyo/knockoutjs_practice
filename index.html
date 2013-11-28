@@ -59,12 +59,18 @@
   </div>
 
   <!-- Contents list -->
-  <ul data-bind="foreach: listItems">
-    <li>
+  <ul data-bind="visible: focusedContent().length === 0, foreach: listItems">
+    <li data-bind="click: $parent.onItemClicked">
       <img data-bind="attr: { src: thumbnail }"></img>
       <span data-bind="text: title"></span>
     </li>
   </ul>
+
+  <!-- Content playback view -->
+  <div data-bind="visible: focusedContent().length > 0">
+    <iframe data-bind="attr: { src: focusedContent }"></iframe>
+    <button type="button" class="btn btn-default" data-bind="click: onPlayerClosed">Close</button>
+  </div>
 
 </body>
 </html>

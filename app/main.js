@@ -20,6 +20,7 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
     self.searchContents = function() {
       youtubewrapper.searchVideo(self.keyword(), function(searchResults) {
         self.listItems.removeAll();
+        self.focusedContent("");
         self.listItems(searchResults);
       }, 0);
 
@@ -42,11 +43,22 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
       self.selectedViewName(newView.name);
       saveFocusedView(newView.name);
       self.listItems.removeAll();
+      self.focusedContent("");
     };
 
     self.bookmarkFocused = function() {
       return (self.selectedViewName() === BOOKMARK_VIEW_NAME);
     };
+
+    self.focusedContent = ko.observable("");
+
+    self.onItemClicked = function(clickedItem) {
+      self.focusedContent(clickedItem.contentUrl);
+    }
+
+    self.onPlayerClosed = function() {
+      self.focusedContent("");
+    }
 
   }
 
