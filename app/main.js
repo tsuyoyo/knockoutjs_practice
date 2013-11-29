@@ -7,7 +7,8 @@
 // requirejsを読み込む際に何も指定しない場合は，読み出したhtmlのディレクトリをbaseUrlとする。
 // この場合、"jquery"と"knockout"の場所はconfig.jsの中でrequreJsに知らせている。
 //
-define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper) {
+define(["jquery", "knockout", "youtubewrapper", "datastore"],
+function($, ko, youtubewrapper, datastore) {
 
   function viewModel() {
   	
@@ -23,10 +24,6 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
         self.focusedContent("");
         self.listItems(searchResults);
       }, 0);
-
-      // youtubewrapper.getVideoTitle(this.searchKeyword(), function(title) {
-      //   self.searchResult(title);
-      // });
     };
 
     self.listItems = ko.observableArray();
@@ -41,7 +38,7 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
 
     self.onViewSwitched = function(newView) {
       self.selectedViewName(newView.name);
-      saveFocusedView(newView.name);
+      datastore.saveFocusedView(newView.name);
       self.listItems.removeAll();
       self.focusedContent("");
     };
@@ -60,30 +57,6 @@ define(["jquery", "knockout", "youtubewrapper"], function($, ko, youtubewrapper)
       self.focusedContent("");
     }
 
-  }
-
-  function saveFocusedView(viewName) {
-    var localStorage = getLocalStorage();
-    if (localStorage) {
-      localStorage.setItem('focusedViewName', viewName);
-    }
-  }
-
-  function loadFocusedView() {
-    var localStorage = getLocalStorage();
-    if (localStorage) {
-      return localStorage.getItem('focusedViewName');
-    } else {
-      return 'bookmark';
-    }
-  }
-
-  function getLocalStorage() {
-    var localStorage = window.localStorage;
-    if (!localStorage) {
-      console.log("localStorage isn't supported in this runtime");
-    }
-    return localStorage;
   }
 
   // （メモ）

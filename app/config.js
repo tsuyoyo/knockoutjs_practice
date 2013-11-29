@@ -1,10 +1,14 @@
 require.config({
   // make bower_components more sensible
   // expose jquery 
+  // (メモ)
+  // このpathを置き換えることによって、youtubewrapperの実態を変えることができたりする。
+  // ここを依存関係の起点にするっていうのもアリかも（そうするのがrequire.js的には標準的？）
   paths: {
     "bower_components": "../bower_components",
     "jquery": "../bower_components/jquery/jquery",
-    "youtubewrapper": "../bower_components/youtubewrapper/youtubewrapper"
+    "youtubewrapper": "../bower_components/youtubewrapper/youtubewrapper",
+    "datastore": "./modules/datastore-offline/datastore"
   },
   map: {
     "*": {
