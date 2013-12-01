@@ -36,6 +36,8 @@ function($, ko, youtubewrapper, datastore) {
 
     self.selectedViewName = ko.observable(self.views()[0].name);
 
+    self.bookmarkItems = ko.observableArray(datastore.loadBookmark());
+
     self.onViewSwitched = function(newView) {
       self.selectedViewName(newView.name);
       datastore.saveFocusedView(newView.name);
@@ -55,6 +57,14 @@ function($, ko, youtubewrapper, datastore) {
 
     self.onPlayerClosed = function() {
       self.focusedContent("");
+    }
+
+    self.addBookmark = function(newItem) {
+      datastore.addBookmark(newItem);
+    }
+
+    self.removeBookmark = function(newItem) {
+      datastore.removeBookmark(newItem);
     }
 
   }
