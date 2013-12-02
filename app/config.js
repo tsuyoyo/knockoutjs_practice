@@ -8,7 +8,8 @@ require.config({
     "bower_components": "../bower_components",
     "jquery": "../bower_components/jquery/jquery",
     "youtubewrapper": "../bower_components/youtubewrapper/youtubewrapper",
-    "datastore": "./modules/datastore-offline/datastore"
+    "datastore": "./modules/datastore-offline/datastore",
+    "focusdata": "./modules/datastore-offline/focusdata"
   },
   map: {
     "*": {

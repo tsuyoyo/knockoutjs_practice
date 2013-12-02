@@ -1,25 +1,6 @@
-define(function() {
-
-  var KEY_FOCUSED_VIEW_NAME = 'focusedViewName';
+define(['focusdata'], function(focusData) {
 
   var KEY_BOOKMARK_HASHES = 'bookmarks';
-
-  function saveFocusedView(viewName) {
-    var localStorage = getLocalStorage();
-    var hash = viewName.hashCode();
-    if (localStorage) {
-      localStorage.setItem(KEY_FOCUSED_VIEW_NAME, viewName);
-    }
-  }
-
-  function loadFocusedView() {
-    var localStorage = getLocalStorage();
-    if (localStorage) {
-      return localStorage.getItem(KEY_FOCUSED_VIEW_NAME);
-    } else {
-      return 'bookmark';
-    }
-  }
 
   function getLocalStorage() {
     var localStorage = window.localStorage;
@@ -29,35 +10,34 @@ define(function() {
     return localStorage;
   }
 
-  function addBookmarkLocalStorage(newItem) {
+  function addBookmarkLocalStorage(newItem, callback) {
     var hash = getHashCode(newItem.contentUrl);
     addHashToLocalStorageArray(hash);
     localStorage[hash].setItem(newItem.toString);
+    callback();
   }
 
-  function removeBookmarkLocalStorage(removeItem) {
+  function removeBookmarkLocalStorage(removeItem, callback) {
     var hash = getHashCode(newItem.contentUrl);
     removeHashFromLocalStorageArray(hash);
     localStorage[hash].removeItem();
+    callback();
   }
 
   function loadBookmarkFromLocalStorage() {
-    var localStorage = getLocalStorage();
-    if (localStorage) {
-      var hashesData = localStorage[KEY_BOOKMARK_HASHES];
-      if (hashesData) {
-        return loadDataObject(hashesData.split(','), localStorage);
-      }
-    }
-    return [];
+    return loadDataObject(loadBookmardHashes());
   }
 
-  function loadDataObject(hashes, localStorage) {
-    var data = [];
-    for (var i=0; i<hashes.length; i++) {
-      data.push(localStorage.getItem(hashes[i]).toJSON());
+  function loadDataObject(hashes) {
+    var localStorage = getLocalStorage();
+    if (localStorage) {
+      var data = [];
+      for (var i=0; i<hashes.length; i++) {
+        data.push(localStorage.getItem(hashes[i]).toJSON());
+      }
+      return data;      
     }
-    return data;S
+    return [];
   }
 
   // This is to culculate identifier for each bookmark ßfrom it's URL.
@@ -74,44 +54,55 @@ define(function() {
     return hash;
   }
 
-  // Referred : 
-  // http://d.hatena.ne.jp/fjwr38/20120318/1332077105
   function addHashToLocalStorageArray(hash){
-    var localStorage = getLocalStorage();
-    if (localStorage) {
-      var arr = localStorage["key"].sprit(",");
-      arr.push(hash);
-      localStorage["key"] = arr.toString();      
-    }
-  };
+    var arr = loadBookmardHashes();
+    arr.push(hash);
+    storeBookmarkHashes(arr);
+  }
 
   function removeHashFromLocalStorageArray(hash){
+    var arr = loadBookmardHashes();
+    for(var i = 0; i < arr.length; i++){
+      if(hash == arr[i]) {
+        delete arr[i];
+      }
+    }
+    storeBookmarkHashes(arr);
+  }
+
+  function storeBookmarkHashes(hashes) {
     var localStorage = getLocalStorage();
     if (localStorage) {
-      var arr = localStorage["key"].sprit(",");
-      for(var i = 0; i < arr.length; i++){
-          if(hash == arr[i]) {
-            delete arr[i];
-          }
-      }
-      localStorage["key"] = arr.toString();
+      localStorage[KEY_BOOKMARK_HASHES] = arr.toString();
+    }    
+  }
+
+  function loadBookmardHashes() {
+    var localStorage = getLocalStorage();
+    if (localStorage && localStorage[KEY_BOOKMARK_HASHES]) {
+      return localStorage[KEY_BOOKMARK_HASHES].split(",");
     }
-  };
+    return [];
+  }
 
   function isBookmarked(data) {
-    // loadして
-
-    // dataのURLでhash計算して
-
-    // loadしたbookmarkの中にあるかどうかをreturn.
+    var hashes = loadBookmardHashes();
+    var dataHash = getHashCode(data.contentUrl);
+    for (var i=0; i<hashes.length; i++) {
+      if (hashes[i] === dataHash) {
+        return true;
+      }
+    }
+    return false;
   }
 
   return {
-    saveFocusedView: saveFocusedView,
-    loadFocusedView: loadFocusedView,
+    saveFocusedView: focusData.saveFocusedView,
+    loadFocusedView: focusData.loadFocusedView,
     addBookmark: addBookmarkLocalStorage,
     removeBookmark: removeBookmarkLocalStorage,
-    loadBookmark: loadBookmarkFromLocalStorage
+    loadBookmark: loadBookmarkFromLocalStorage,
+    isBookmarked: isBookmarked
   };
 
 });
