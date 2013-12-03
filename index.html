@@ -66,8 +66,8 @@
         <span data-bind="text: title"></span>
       </span>
       <button type="button" class="btn btn-default" 
-              data-bind="visible: !$root.isBookmarked($data), 
-                           click: $root.addBookmark($data)">Bookmark</button>
+              data-bind="visible: !$parent.isBookmarked($data), 
+                           click: $parent.addBookmark">Bookmark</button>
     </li>
   </ul>
 

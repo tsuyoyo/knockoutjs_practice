@@ -15,7 +15,7 @@ define(['focusdata'], function(focusData) {
     var localStorage = getLocalStorage();
     if (localStorage) {
       addHashToLocalStorageArray(hash, localStorage);
-      localStorage.setItem(String(hash), newItem.toString);      
+      localStorage[hash] = JSON.stringify(newItem);
     }
     callback();
   }
@@ -25,7 +25,7 @@ define(['focusdata'], function(focusData) {
     var localStorage = getLocalStorage();
     if (localStorage) {
       removeHashFromLocalStorageArray(hash, localStorage);
-      localStorage.removeItem(String(hash));
+      localStorage.removeItem(hash);
     }
     callback();
   }
@@ -33,7 +33,8 @@ define(['focusdata'], function(focusData) {
   function loadBookmarkFromLocalStorage() {
     var localStorage = getLocalStorage();
     if (localStorage) {
-      return loadDataObject(loadBookmardHashes(localStorage), localStorage);
+      var hashes = loadBookmardHashes(localStorage);
+      return loadDataObject(hashes, localStorage);
     }
     return [];
   }
@@ -43,7 +44,6 @@ define(['focusdata'], function(focusData) {
     for (var i=0; i<hashes.length; i++) {
       var itemStr = localStorage.getItem(String(hashes[i]));
       if (itemStr && 0 < itemStr.length) {
-        console.log(hashes.length + " : loadDataObject");
         try {
           data.push(JSON.parse(itemStr));          
         } catch (e) {
@@ -59,7 +59,7 @@ define(['focusdata'], function(focusData) {
     if (localStorage) {
       var hashes = loadBookmardHashes(localStorage);
       for (var i=0, dataHash = getHashCode(data.contentUrl); i<hashes.length; i++) {
-        if (hashes[i] === dataHash) {
+        if (hashes[i] == dataHash) {
           return true;
         }
       }
@@ -68,7 +68,6 @@ define(['focusdata'], function(focusData) {
   }
 
   function addHashToLocalStorageArray(hash, localStorage){
-    console.log('addHashToLocalStorageArray : ' + hash);
     var arr = loadBookmardHashes(localStorage);
     arr.push(hash);
     storeBookmarkHashes(arr, localStorage);
@@ -90,7 +89,6 @@ define(['focusdata'], function(focusData) {
 
   function loadBookmardHashes(localStorage) {
     if (localStorage[KEY_BOOKMARK_HASHES] && 0 < localStorage[KEY_BOOKMARK_HASHES].length) {
-      console.log(localStorage[KEY_BOOKMARK_HASHES]);
       return localStorage[KEY_BOOKMARK_HASHES].split(",");
     }
     return [];
