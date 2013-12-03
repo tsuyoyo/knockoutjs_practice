@@ -53,18 +53,26 @@ function($, ko, youtubewrapper, datastore) {
 
     self.onItemClicked = function(clickedItem) {
       self.focusedContent(clickedItem.contentUrl);
-    }
+    };
 
     self.onPlayerClosed = function() {
       self.focusedContent("");
-    }
+    };
 
     self.addBookmark = function(newItem) {
-      datastore.addBookmark(newItem);
-    }
+      datastore.addBookmark(newItem, updateBookmarkItems);
+    };
 
     self.removeBookmark = function(newItem) {
-      datastore.removeBookmark(newItem);
+      datastore.removeBookmark(newItem, updateBookmarkItems);
+    };
+
+    self.isBookmarked = function(item) {
+      return datastore.isBookmarked(item);
+    };
+
+    function updateBookmarkItems() {
+      self.bookmarkItems(datastore.loadBookmark());
     }
 
   }

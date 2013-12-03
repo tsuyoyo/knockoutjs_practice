@@ -60,9 +60,14 @@
 
   <!-- Contents list -->
   <ul data-bind="visible: focusedContent().length === 0, foreach: listItems">
-    <li data-bind="click: $parent.onItemClicked">
-      <img data-bind="attr: { src: thumbnail }"></img>
-      <span data-bind="text: title"></span>
+    <li>
+      <span data-bind="click: $parent.onItemClicked">
+        <img data-bind="attr: { src: thumbnail }"></img>
+        <span data-bind="text: title"></span>
+      </span>
+      <button type="button" class="btn btn-default" 
+              data-bind="visible: !$root.isBookmarked($data), 
+                           click: $root.addBookmark($data)">Bookmark</button>
     </li>
   </ul>
 

@@ -12,30 +12,86 @@ define(['focusdata'], function(focusData) {
 
   function addBookmarkLocalStorage(newItem, callback) {
     var hash = getHashCode(newItem.contentUrl);
-    addHashToLocalStorageArray(hash);
-    localStorage[hash].setItem(newItem.toString);
+    var localStorage = getLocalStorage();
+    if (localStorage) {
+      addHashToLocalStorageArray(hash, localStorage);
+      localStorage.setItem(String(hash), newItem.toString);      
+    }
     callback();
   }
 
   function removeBookmarkLocalStorage(removeItem, callback) {
     var hash = getHashCode(newItem.contentUrl);
-    removeHashFromLocalStorageArray(hash);
-    localStorage[hash].removeItem();
+    var localStorage = getLocalStorage();
+    if (localStorage) {
+      removeHashFromLocalStorageArray(hash, localStorage);
+      localStorage.removeItem(String(hash));
+    }
     callback();
   }
 
   function loadBookmarkFromLocalStorage() {
-    return loadDataObject(loadBookmardHashes());
-  }
-
-  function loadDataObject(hashes) {
     var localStorage = getLocalStorage();
     if (localStorage) {
-      var data = [];
-      for (var i=0; i<hashes.length; i++) {
-        data.push(localStorage.getItem(hashes[i]).toJSON());
+      return loadDataObject(loadBookmardHashes(localStorage), localStorage);
+    }
+    return [];
+  }
+
+  function loadDataObject(hashes, localStorage) {
+    var data = [];
+    for (var i=0; i<hashes.length; i++) {
+      var itemStr = localStorage.getItem(String(hashes[i]));
+      if (itemStr && 0 < itemStr.length) {
+        console.log(hashes.length + " : loadDataObject");
+        try {
+          data.push(JSON.parse(itemStr));          
+        } catch (e) {
+          console.error('Parse error in loadDataObject function' + hashes[i] + itemStr);
+        }
+      }    
+    }
+    return data;
+  }
+
+  function isBookmarked(data) {
+    var localStorage = getLocalStorage();
+    if (localStorage) {
+      var hashes = loadBookmardHashes(localStorage);
+      for (var i=0, dataHash = getHashCode(data.contentUrl); i<hashes.length; i++) {
+        if (hashes[i] === dataHash) {
+          return true;
+        }
       }
-      return data;      
+    }
+    return false;
+  }
+
+  function addHashToLocalStorageArray(hash, localStorage){
+    console.log('addHashToLocalStorageArray : ' + hash);
+    var arr = loadBookmardHashes(localStorage);
+    arr.push(hash);
+    storeBookmarkHashes(arr, localStorage);
+  }
+
+  function removeHashFromLocalStorageArray(hash, localStorage){
+    var arr = loadBookmardHashes(localStorage);
+    for(var i = 0; i < arr.length; i++){
+      if(hash == arr[i]) {
+        delete arr[i];
+      }
+    }
+    storeBookmarkHashes(arr, localStorage);
+  }
+
+  function storeBookmarkHashes(hashes, localStorage) {
+    localStorage[KEY_BOOKMARK_HASHES] = hashes.toString();
+  }
+
+  function loadBookmardHashes(localStorage) {
+    if (localStorage[KEY_BOOKMARK_HASHES] && 0 < localStorage[KEY_BOOKMARK_HASHES].length) {
+      console.log(localStorage[KEY_BOOKMARK_HASHES]);
+      return localStorage[KEY_BOOKMARK_HASHES].split(",");
     }
     return [];
   }
@@ -54,54 +110,49 @@ define(['focusdata'], function(focusData) {
     return hash;
   }
 
-  function addHashToLocalStorageArray(hash){
-    var arr = loadBookmardHashes();
-    arr.push(hash);
-    storeBookmarkHashes(arr);
-  }
-
-  function removeHashFromLocalStorageArray(hash){
-    var arr = loadBookmardHashes();
-    for(var i = 0; i < arr.length; i++){
-      if(hash == arr[i]) {
-        delete arr[i];
-      }
-    }
-    storeBookmarkHashes(arr);
-  }
-
-  function storeBookmarkHashes(hashes) {
-    var localStorage = getLocalStorage();
-    if (localStorage) {
-      localStorage[KEY_BOOKMARK_HASHES] = arr.toString();
-    }    
-  }
-
-  function loadBookmardHashes() {
-    var localStorage = getLocalStorage();
-    if (localStorage && localStorage[KEY_BOOKMARK_HASHES]) {
-      return localStorage[KEY_BOOKMARK_HASHES].split(",");
-    }
-    return [];
-  }
-
-  function isBookmarked(data) {
-    var hashes = loadBookmardHashes();
-    var dataHash = getHashCode(data.contentUrl);
-    for (var i=0; i<hashes.length; i++) {
-      if (hashes[i] === dataHash) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   return {
+    /**
+     * saveFocusedView(viewName)
+     *
+     * @param viewName
+     **/
     saveFocusedView: focusData.saveFocusedView,
+
+    /**
+     * saveFocusedView()
+     *
+     **/
     loadFocusedView: focusData.loadFocusedView,
+
+    /**
+     * addBookmark(newItem, callback)
+     *
+     * @param newItem
+     * @param callback
+     **/
     addBookmark: addBookmarkLocalStorage,
+
+    /**
+     * removeBookmark(removeItem, callback)
+     *
+     * @param newItem
+     * @param callback
+     **/
     removeBookmark: removeBookmarkLocalStorage,
+
+    /**
+     * loadBookmark()
+     *
+     * @return
+     **/
     loadBookmark: loadBookmarkFromLocalStorage,
+
+    /**
+     * isBookmarked(item)
+     *
+     * @param item
+     * @return
+     **/
     isBookmarked: isBookmarked
   };
 
