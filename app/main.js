@@ -26,30 +26,32 @@ function($, ko, youtubewrapper, datastore) {
       }, 0);
     };
 
-    self.listItems = ko.observableArray();
-
     self.views = ko.observableArray([
       {name: 'youtube', provider: null},
       {name: 'instagram', provider: null},
       {name: BOOKMARK_VIEW_NAME}
     ]);
 
+    self.listItems = ko.observableArray();
+
     self.selectedViewName = ko.observable(self.views()[0].name);
 
-    self.bookmarkItems = ko.observableArray(datastore.loadBookmark());
+    self.focusedContent = ko.observable("");
+
+    var bookmarkItems = datastore.loadBookmark();
+
+    var backUpContentList = [];
 
     self.onViewSwitched = function(newView) {
+      updateListItems(newView.name);
       self.selectedViewName(newView.name);
       datastore.saveFocusedView(newView.name);
-      self.listItems.removeAll();
       self.focusedContent("");
     };
 
     self.bookmarkFocused = function() {
       return (self.selectedViewName() === BOOKMARK_VIEW_NAME);
     };
-
-    self.focusedContent = ko.observable("");
 
     self.onItemClicked = function(clickedItem) {
       self.focusedContent(clickedItem.contentUrl);
@@ -59,12 +61,18 @@ function($, ko, youtubewrapper, datastore) {
       self.focusedContent("");
     };
 
-    self.addBookmark = function(newItem) {
-      datastore.addBookmark(newItem, updateBookmarkItems);
+    self.addBookmark = function(newItem, event) {
+      datastore.addBookmark(newItem, function(isSuccess) {
+        updateBookmarkItems();
+        event.target.style.visibility = 'hidden';
+      });
     };
 
     self.removeBookmark = function(newItem) {
-      datastore.removeBookmark(newItem, updateBookmarkItems);
+      datastore.removeBookmark(newItem, function(isSuccess) {
+        updateBookmarkItems();
+        event.target.style.visibility = 'visible';
+      });
     };
 
     self.isBookmarked = function(item) {
@@ -72,7 +80,21 @@ function($, ko, youtubewrapper, datastore) {
     };
 
     function updateBookmarkItems() {
-      self.bookmarkItems(datastore.loadBookmark());
+      bookmarkItems = datastore.loadBookmark();
+    }
+
+    function updateListItems(newViewName) {
+      // Save current shown list.
+      var curView = self.selectedViewName();
+      if(BOOKMARK_VIEW_NAME === newViewName) {
+        backUpContentList[curView] = self.listItems();
+        self.listItems(bookmarkItems);
+      } else if (backUpContentList[newViewName]) {
+        self.listItems(backUpContentList[newViewName]);
+      } else {
+        // Memo:removeAll() can't be used because all objects are destroyed.          
+        self.listItems([]);
+      }
     }
 
   }

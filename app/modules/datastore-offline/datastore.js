@@ -13,21 +13,25 @@ define(['focusdata'], function(focusData) {
   function addBookmarkLocalStorage(newItem, callback) {
     var hash = getHashCode(newItem.contentUrl);
     var localStorage = getLocalStorage();
+    var isSuccess = false;
     if (localStorage) {
       addHashToLocalStorageArray(hash, localStorage);
       localStorage[hash] = JSON.stringify(newItem);
+      isSuccess = true;
     }
-    callback();
+    callback(isSuccess);
   }
 
   function removeBookmarkLocalStorage(removeItem, callback) {
     var hash = getHashCode(newItem.contentUrl);
     var localStorage = getLocalStorage();
+    var isSuccess = false;
     if (localStorage) {
       removeHashFromLocalStorageArray(hash, localStorage);
       localStorage.removeItem(hash);
+      isSuccess = true;
     }
-    callback();
+    callback(isSuccess);
   }
 
   function loadBookmarkFromLocalStorage() {

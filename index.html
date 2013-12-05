@@ -65,9 +65,14 @@
         <img data-bind="attr: { src: thumbnail }"></img>
         <span data-bind="text: title"></span>
       </span>
+      <!-- Bookmark button -->
       <button type="button" class="btn btn-default" 
               data-bind="visible: !$parent.isBookmarked($data), 
-                           click: $parent.addBookmark">Bookmark</button>
+                         click: $parent.addBookmark">Bookmark</button>
+      <!-- Unbookmark button -->
+      <button type="button" class="btn btn-default" 
+              data-bind="visible: $parent.bookmarkFocused(),
+                           click: $parent.removeBookmark">Remove</button>
     </li>
   </ul>
 
