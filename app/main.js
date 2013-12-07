@@ -7,8 +7,8 @@
 // requirejsを読み込む際に何も指定しない場合は，読み出したhtmlのディレクトリをbaseUrlとする。
 // この場合、"jquery"と"knockout"の場所はconfig.jsの中でrequreJsに知らせている。
 //
-define(["jquery", "knockout", "youtubewrapper", "datastore"],
-function($, ko, youtubewrapper, datastore) {
+define(["jquery", "knockout", "youtubewrapper", "instagramwrapper", "datastore"],
+function($, ko, youtubewrapper, instagramwrapper, datastore) {
 
   function viewModel() {
   	
@@ -17,24 +17,27 @@ function($, ko, youtubewrapper, datastore) {
     var self = this;
 
   	self.keyword = ko.observable("");
-
-    self.searchContents = function() {
-      youtubewrapper.searchVideo(self.keyword(), function(searchResults) {
-        self.listItems.removeAll();
-        self.focusedContent("");
-        self.listItems(searchResults);
-      }, 0);
-    };
-
+    
     self.views = ko.observableArray([
-      {name: 'youtube', provider: null},
-      {name: 'instagram', provider: null},
-      {name: BOOKMARK_VIEW_NAME}
+      {name: 'youtube', provider: youtubewrapper},
+      {name: 'instagram', provider: instagramwrapper},
+      {name: BOOKMARK_VIEW_NAME, provider: null}
     ]);
 
-    self.listItems = ko.observableArray();
-
     self.selectedViewName = ko.observable(self.views()[0].name);
+
+    var selectedViewProvider = self.views()[0].provider;
+
+    self.searchContents = function() {
+      selectedViewProvider.searchVideo(self.keyword(), 
+        function(searchResults) {
+          self.listItems.removeAll();
+          self.focusedContent("");
+          self.listItems(searchResults);
+        }, 0);
+    };
+
+    self.listItems = ko.observableArray();
 
     self.focusedContent = ko.observable("");
 
@@ -45,6 +48,12 @@ function($, ko, youtubewrapper, datastore) {
     self.onViewSwitched = function(newView) {
       updateListItems(newView.name);
       self.selectedViewName(newView.name);
+      for (var i=0; i<self.views().length; i++) {
+        if (self.views()[i].name == newView.name) {
+          selectedViewProvider = self.views()[i].provider;
+          break;
+        }
+      }
       datastore.saveFocusedView(newView.name);
       self.focusedContent("");
     };
