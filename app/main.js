@@ -77,10 +77,11 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
       });
     };
 
-    self.removeBookmark = function(newItem) {
-      datastore.removeBookmark(newItem, function(isSuccess) {
+    self.removeBookmark = function(item) {
+      datastore.removeBookmark(item, function(isSuccess) {
         updateBookmarkItems();
-        event.target.style.visibility = 'visible';
+        self.listItems(bookmarkItems);        
+        event.target.style.visibility = 'hidden';
       });
     };
 

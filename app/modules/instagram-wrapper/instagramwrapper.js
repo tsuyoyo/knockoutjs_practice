@@ -20,7 +20,7 @@ define(function() {
 
   function createImageData(dataEntry) {
     var contentUrl = dataEntry.images.standard_resolution.url;
-    var thumbnail  = dataEntry.images.low_resolution.url;
+    var thumbnail  = dataEntry.images.thumbnail.url;
     var titleCaption = dataEntry.caption.text;
     return {contentUrl: contentUrl, thumbnail: thumbnail, title: titleCaption};
   }

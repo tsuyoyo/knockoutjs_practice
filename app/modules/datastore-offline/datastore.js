@@ -23,7 +23,7 @@ define(['focusdata'], function(focusData) {
   }
 
   function removeBookmarkLocalStorage(removeItem, callback) {
-    var hash = getHashCode(newItem.contentUrl);
+    var hash = getHashCode(removeItem.contentUrl);
     var localStorage = getLocalStorage();
     var isSuccess = false;
     if (localStorage) {
