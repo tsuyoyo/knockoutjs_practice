@@ -63,13 +63,21 @@ module.exports = function(grunt) {
         tasks: ['jshint:gruntfile']
       },
       src: {
-        files: '<%= jshint.src.src %>',
+        files: '<%= jshint.app.src %>',
         tasks: ['jshint:src', 'qunit']
       },
       test: {
         files: '<%= jshint.test.src %>',
         tasks: ['jshint:test', 'qunit']
       },
+      livereload: {
+        files: [
+              '**/*.html'//, 'app/*.js', 'app/*.css'
+        ],
+        options: {
+          livereload: true
+        }
+      }
     },
     requirejs: {
       compile: {
@@ -84,8 +92,8 @@ module.exports = function(grunt) {
     connect: {
       development: {
         options: {
-          keepalive: true,
-          port: 1234,          
+//          keepalive: true,
+          port: 1234          
         }
       },
       production: {
@@ -122,7 +130,7 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'requirejs', 'concat', 'uglify']);
-  grunt.registerTask('preview', ['connect:development']);
+  grunt.registerTask('preview', ['connect:development', 'watch:livereload']);
   grunt.registerTask('preview-live', ['default', 'connect:production']);
 
 };
