@@ -2,6 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1" />
+
   <title>This is my sample app with knockoutjs</title>
   <script data-main="app/config" src="bower_components/requirejs/require.js"></script>
 
@@ -16,6 +18,8 @@
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="./css/contentlistStyle.css">
 </head>
 <body>
 
@@ -59,20 +63,27 @@
   </div>
 
   <!-- Contents list -->
-  <ul data-bind="visible: focusedContent().length === 0, foreach: listItems">
-    <li>
-      <span data-bind="click: $parent.onItemClicked">
-        <img data-bind="attr: { src: thumbnail }"></img>
-        <span data-bind="text: title"></span>
-      </span>
+  <ul class="content-list" data-bind="visible: focusedContent().length === 0, foreach: listItems">
+    <li class="content-list-item">
+      <div>
+      <!-- Thumbnail -->
+      <img id="content-list-item-thumbnail"
+           data-bind="attr: { src: thumbnail }, click: $parent.onItemClicked"></img>
+
+      <!-- Title -->
+      <span id="content-list-item-title"
+            data-bind="text: title, click: $parent.onItemClicked"></span>
+
       <!-- Bookmark button -->
-      <button type="button" class="btn btn-default" 
+      <button id="content-list-item-bookmark" type="button" class="btn btn-default" 
               data-bind="visible: !$parent.isBookmarked($data), 
-                         click: $parent.addBookmark">Bookmark</button>
+                           click: $parent.addBookmark">Bookmark</button>
+
       <!-- Unbookmark button -->
-      <button type="button" class="btn btn-default" 
+      <button id="content-list-item-remove" type="button" class="btn btn-default" 
               data-bind="visible: $parent.bookmarkFocused(),
-                           click: $parent.removeBookmark">Remove</button>
+                         click: $parent.removeBookmark">Remove</button>
+      </div>
     </li>
   </ul>
 

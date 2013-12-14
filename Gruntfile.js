@@ -72,7 +72,7 @@ module.exports = function(grunt) {
       },
       livereload: {
         files: [
-              '**/*.html'//, 'app/*.js', 'app/*.css'
+              '**/*.html', 'app/*.js', 'css/*.css'
         ],
         options: {
           livereload: true
@@ -92,7 +92,6 @@ module.exports = function(grunt) {
     connect: {
       development: {
         options: {
-//          keepalive: true,
           port: 1234          
         }
       },
