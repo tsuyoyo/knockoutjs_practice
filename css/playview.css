@@ -1,0 +1,24 @@
+@media screen and (min-width: 769px) {
+
+	.content-playback-view {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
+
+	.content-playback-view #frame {
+		width: 80%;
+		height: 70%;
+		left: 10%;
+		top: 1%;
+		position: relative;	
+	}
+
+	.content-playback-view #backbtn {
+		width: 8%;
+		left: 1%;
+		top: 1%;
+		position: absolute;
+	}
+
+}

@@ -19,7 +19,8 @@
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="./css/contentlistStyle.css">
+  <link rel="stylesheet" href="./css/contentlist.css">
+  <link rel="stylesheet" href="./css/playview.css">  
 </head>
 <body>
 
@@ -88,9 +89,10 @@
   </ul>
 
   <!-- Content playback view -->
-  <div data-bind="visible: focusedContent().length > 0">
-    <iframe data-bind="attr: { src: focusedContent }"></iframe>
-    <button type="button" class="btn btn-default" data-bind="click: onPlayerClosed">Close</button>
+  <div class="content-playback-view" data-bind="visible: focusedContent().length > 0">
+    <iframe id="frame" data-bind="attr: { src: focusedContent }"></iframe>
+    <button id="backbtn" type="button" class="btn btn-default" 
+            data-bind="click: onPlayerClosed">Back</button>
   </div>
 
 </body>
