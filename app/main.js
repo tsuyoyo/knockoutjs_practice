@@ -10,13 +10,13 @@
 define(["jquery", "knockout", "youtubewrapper", "instagramwrapper", "datastore"],
 function($, ko, youtubewrapper, instagramwrapper, datastore) {
 
-  function viewModel() {
-  	
+  function ViewModel() {
+
     var BOOKMARK_VIEW_NAME = 'bookmark';
 
     var self = this;
 
-  	self.keyword = ko.observable("");
+    self.keyword = ko.observable("");
     
     self.views = ko.observableArray([
       {name: 'youtube', provider: youtubewrapper},
@@ -49,7 +49,7 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
       updateListItems(newView.name);
       self.selectedViewName(newView.name);
       for (var i=0; i<self.views().length; i++) {
-        if (self.views()[i].name == newView.name) {
+        if (self.views()[i].name === newView.name) {
           selectedViewProvider = self.views()[i].provider;
           break;
         }
@@ -72,8 +72,12 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
 
     self.addBookmark = function(newItem, event) {
       datastore.addBookmark(newItem, function(isSuccess) {
-        updateBookmarkItems();
-        event.target.style.visibility = 'hidden';
+        if (isSuccess) {
+          updateBookmarkItems();
+          event.target.style.visibility = 'hidden';          
+        } else {
+          console.log('Failed to add bookmark');
+        }
       });
     };
 
@@ -114,5 +118,5 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
   // ２つ目の引数はオプションです。ViewModel をバインドする対象のDOM要素を指定することができます。
   // これにより、ID「someElementId」が付与された要素と、その配下の要素に対してのみバインドを適用することができます。
   // １つのページに対して、部分ごとに異なる ViewModel をバインドさせるといった使い方ができます。
-  ko.applyBindings(new viewModel(), $('html')[0]);
+  ko.applyBindings(new ViewModel(), $('html')[0]);
 });
