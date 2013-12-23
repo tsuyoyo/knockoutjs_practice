@@ -4,6 +4,16 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
+
+    // configurable paths
+    yeoman: {
+      app: 'app',
+      css: 'css',
+      html: '.',
+      dist: 'dist',
+      images: 'images'
+    },
+
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
     banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
@@ -15,14 +25,15 @@ module.exports = function(grunt) {
     clean: {
       files: ['dist']
     },
+
     concat: {
       options: {
         banner: '<%= banner %>',
         stripBanners: true
       },
       dist: {
-        src: ['components/requirejs/require.js', '<%= concat.dist.dest %>'],
-        dest: 'dist/require.js'
+        src: ['<%= yeoman.app %>/**/*.js'],
+        dest: 'dist/allsrc.js'
       },
     },
     uglify: {
@@ -31,7 +42,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/require.min.js'
+        dest: 'dist/allsrc_min.js'
       },
     },
     qunit: {
@@ -46,9 +57,9 @@ module.exports = function(grunt) {
       },
       app: {
         options: {
-          jshintrc: 'app/.jshintrc'
+          jshintrc: '<%= yeoman.app %>/.jshintrc'
         },
-        src: ['app/**/*.js']
+        src: ['<%= yeoman.app %>/**/*.js']
       },
       test: {
         options: {
@@ -72,7 +83,9 @@ module.exports = function(grunt) {
       },
       livereload: {
         files: [
-              '**/*.html', 'app/*.js', 'css/*.css'
+          '<%= yeoman.html %>/*.html',
+          '<%= yeoman.app %>/*.js',
+          '<%= yeoman.css %>/*.css',
         ],
         options: {
           livereload: true
@@ -83,16 +96,25 @@ module.exports = function(grunt) {
       compile: {
         options: {
           name: 'config',
-          mainConfigFile: 'app/config.js',
+          mainConfigFile: '<%= yeoman.app %>/config.js',
           out: '<%= concat.dist.dest %>',
           optimize: 'none'
         }
       }
     },
     connect: {
-      development: {
+      options: {
+        port: 1234,
+        livereload: 35729,
+        // change this to '0.0.0.0' to access the server from outside
+        hostname: 'localhost'
+      },
+      livereload: {
         options: {
-          port: 1234          
+          open: true,
+          base: [
+            '<%= yeoman.html %>'
+          ]
         }
       },
       production: {
@@ -114,7 +136,64 @@ module.exports = function(grunt) {
           }
         }
       }
-    }
+    },
+    // 引き込んでいるbower componentを自動的にhtmlの中へ書く
+    'bower-install': {
+      target: {
+        html: '<%= yeoman.html %>/index.html'
+      }
+    },
+    'useminPrepare': {
+      options: {
+        root: '<%= yeoman.app %>',
+        dest: '<%= yeoman.dist %>'
+      },
+      html: ['<%= yeoman.dist %>/**/*.html']
+    },
+    // htmlファイルの中のjs/cssのパスを、minifyしたものへ置き換える
+    'usemin': {
+      options: {
+        dirs: ['<%= yeoman.dist %>']
+      },
+      html: ['<%= yeoman.dist %>/**/*.html']
+    },
+    // minifyの対象外のファイルを、distへコピーする
+    copy: {
+      dist: {
+        files: [
+          {
+            expand: true,
+            // Allow patterns to match filenames starting with a period, 
+            // even if the pattern does not explicitly have a period in that spot.
+            dot: true,
+            cwd: "./",
+            dest: "dist/",
+            src: [
+              '<%= yeoman.html %>/bower_components/**/*', 
+              '<%= yeoman.html %>/*.html', 
+              '<%= yeoman.app %>/**/*.js',
+              '<%= yeoman.css %>/**',
+              '<%= yeoman.images %>/**'
+            ],
+            filter: "isFile"
+          }
+        ]
+      },
+      webappManifest: {
+        files: [
+          {
+            expand: true,
+            dot: true,
+            cwd: "./",
+            dest: "dist/",
+            src: [
+              '<%= yeoman.html %>/manifest.webapp' 
+            ],
+            filter: "isFile"
+          }
+        ]
+      }
+    } 
   });
 
   // These plugins provide necessary tasks.
@@ -126,10 +205,26 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-bower-install');
+  grunt.loadNpmTasks('grunt-usemin');
+  grunt.loadNpmTasks('grunt-contrib-copy');  
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'requirejs', 'concat', 'uglify']);
-  grunt.registerTask('preview', ['connect:development', 'watch:livereload']);
+  grunt.registerTask('preview', ['connect:livereload', 'watch:livereload']);
   grunt.registerTask('preview-live', ['default', 'connect:production']);
+  grunt.registerTask('jshint-check', ['jshint:app']);
 
+  // FxOS用
+  grunt.registerTask('fxos-app-debug', [
+//    'bower-install', 
+    'clean', 
+    'copy:dist',
+    'copy:webappManifest'
+//    'useminPrepare', 
+//    'concat', 
+//    'uglify', 
+//    'usemin',
+
+  ]);
 };

@@ -28,6 +28,9 @@
     "grunt-contrib-clean": "*",
     "grunt": "~0.4.1",
     "grunt-contrib-requirejs": "*",
-    "grunt-contrib-connect": "*"
+    "grunt-contrib-connect": "*",
+    "grunt-usemin": "~2.0.2",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-bower-install": "~0.7.0"
   }
 }

@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "name": "Media Bookmarker",
+  "description": "Online video & image bookmarker",
+  "launch_path": "/index.html",
+  "icons": {
+    "60": "/images/icons/Video_60.png",
+    "90": "/images/icons/Video_90.png",
+    "120": "/images/icons/Video_120.png"
+  },
+  "developer": {
+    "name": "tsuyoyo",
+    "url": "https://github.com/tsuyoyo/131111_knockoutjs_practice"
+  },
+  "installs_allowed_from": ["*"],
+  "default_locale": "en"
+}
