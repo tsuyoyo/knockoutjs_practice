@@ -20,9 +20,11 @@ define(function() {
 
   function createImageData(dataEntry) {
     var contentUrl = dataEntry.images.standard_resolution.url;
+    var html = '<img src="' + contentUrl + '" id="photo-viewer"></img>';
     var thumbnail  = dataEntry.images.thumbnail.url;
     var titleCaption = (dataEntry.caption) ? dataEntry.caption.text : "";
-    return {contentUrl: contentUrl, thumbnail: thumbnail, title: titleCaption};
+
+    return {contentHtml: html, contentUrl: contentUrl, thumbnail: thumbnail, title: titleCaption};
   }
 
   function callJsonp(url, callback, jsonParser) {

@@ -6,18 +6,77 @@
 		position: absolute;
 	}
 
-	.content-playback-view #frame {
+	.content-playback-view #content-viewer {
 		width: 80%;
 		height: 70%;
-		left: 10%;
-		top: 1%;
-		position: relative;	
+		left: 1%;
+		top: 4.5em;
+		position: absolute;
+	}
+
+	.content-playback-view #photo-viewer {
+
+	}
+
+	.content-playback-view #youtube-viewer {
+		width: 640px;
+		height: 360px;
+		position: relative;
 	}
 
 	.content-playback-view #backbtn {
 		width: 8%;
+		top: 0%;
+		height: 2.5em;
 		left: 1%;
-		top: 1%;
+		position: absolute;
+	}
+
+	.content-playback-view #content-title {
+		left:1%;
+		top: 3em;
+		position: absolute;
+	}
+
+}
+
+/* For mobile */
+@media screen and (max-width: 768px) {
+		.content-playback-view {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
+
+	.content-playback-view #content-viewer {
+		width: 98%;
+		height: 70%;
+		left: 1%;
+		top: 4.5em;
+		position: absolute;
+	}
+
+	.content-playback-view #photo-viewer {
+
+	}
+
+	.content-playback-view #youtube-viewer {
+		width:  90%;
+		left:   5%;
+		height: 60%;
+		position: relative;
+	}
+
+	.content-playback-view #backbtn {
+		top: 0%;
+		height: 2.5em;
+		left: 1%;
+		position: absolute;
+	}
+
+	.content-playback-view #content-title {
+		left:1%;
+		top: em;
 		position: absolute;
 	}
 

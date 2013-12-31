@@ -40,6 +40,8 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
     self.listItems = ko.observableArray();
 
     self.focusedContent = ko.observable("");
+    self.focusedContentHtml = ko.observable("");
+    self.focusedContentTitle = ko.observable("");
 
     var bookmarkItems = datastore.loadBookmark();
 
@@ -55,19 +57,52 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
         }
       }
       datastore.saveFocusedView(newView.name);
-      self.focusedContent("");
+      clearFocus();
     };
 
     self.bookmarkFocused = function() {
       return (self.selectedViewName() === BOOKMARK_VIEW_NAME);
     };
 
+    // メモ：FxOS、Androidの時は、ここでintentを飛ばすようにする
     self.onItemClicked = function(clickedItem) {
-      self.focusedContent(clickedItem.contentUrl);
+
+      function setFocusContent() {
+        self.focusedContent(clickedItem.contentUrl);
+        self.focusedContentHtml(clickedItem.contentHtml);
+        self.focusedContentTitle(clickedItem.title);        
+      }
+
+      // MozActivityがあったらそっちでビデオの再生を試みる。
+      // ダメだったらPCと同様、アプリ内にビデオの再生画面を出す。
+      // TODO : 写真の場合の処理が入っていないので別途考える。
+      if (MozActivity) {
+        var activity = new MozActivity({
+          name: 'open',
+          data: {
+            type: [
+              // "video/webm",
+              // "video/mp4",
+              // "video/3gpp",
+              "video/youtube"
+            ],
+            url: clickedItem.contentUrl
+          }
+        });
+        activity.onsuccess = function() {
+          console.log('Succeeded to play ' + clickedItem.contentUrl);
+        };
+        activity.onerror = function() {
+          console.log('Failed to play ' + clickedItem.contentUrl);
+          setFocusContent();
+        };
+      } else {
+        setFocusContent();
+      }
     };
 
     self.onPlayerClosed = function() {
-      self.focusedContent("");
+      clearFocus();
     };
 
     self.addBookmark = function(newItem, event) {
@@ -92,6 +127,12 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
     self.isBookmarked = function(item) {
       return datastore.isBookmarked(item);
     };
+
+    function clearFocus() {
+      self.focusedContent('');
+      self.focusedContentHtml('');
+      self.focusedContentTitle('');      
+    }
 
     function updateBookmarkItems() {
       bookmarkItems = datastore.loadBookmark();
@@ -119,4 +160,5 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
   // これにより、ID「someElementId」が付与された要素と、その配下の要素に対してのみバインドを適用することができます。
   // １つのページに対して、部分ごとに異なる ViewModel をバインドさせるといった使い方ができます。
   ko.applyBindings(new ViewModel(), $('html')[0]);
+
 });

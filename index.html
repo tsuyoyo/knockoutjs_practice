@@ -60,7 +60,7 @@
   </nav>
 
   <!-- Search form (displayed only for search views) -->
-  <div class="input-group" data-bind="visible: !bookmarkFocused()">
+  <div class="input-group" data-bind="visible: !bookmarkFocused() && focusedContent().length === 0">
     <input type="text" class="form-control" data-bind="value: keyword" placeholder="Keyword" />
     <span class="input-group-btn">
       <button class="btn btn-default" type="button" data-bind="click: searchContents">Search</button>
@@ -94,9 +94,10 @@
 
   <!-- Content playback view -->
   <div class="content-playback-view" data-bind="visible: focusedContent().length > 0">
-    <iframe id="frame" data-bind="attr: { src: focusedContent }"></iframe>
-    <button id="backbtn" type="button" class="btn btn-default" 
+    <div id="content-viewer" data-bind="html: focusedContentHtml"></div>
+    <button id="backbtn" type="button" class="btn btn-default"
             data-bind="click: onPlayerClosed">Back</button>
+    <div id="content-title" data-bind="text: focusedContentTitle"></div>
   </div>
 
 </body>
