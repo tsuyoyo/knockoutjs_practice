@@ -76,7 +76,7 @@ function($, ko, youtubewrapper, instagramwrapper, datastore) {
       // MozActivityがあったらそっちでビデオの再生を試みる。
       // ダメだったらPCと同様、アプリ内にビデオの再生画面を出す。
       // TODO : 写真の場合の処理が入っていないので別途考える。
-      if (MozActivity) {
+      if (typeof MozActivity !== "undefined") {
         var activity = new MozActivity({
           name: 'open',
           data: {
